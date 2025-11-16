@@ -2,8 +2,11 @@ from loaders.pdf_loader import load_pdf
 from loaders.docx_loader import load_docx
 from loaders.csv_loader import load_csv
 from loaders.txt_loader import load_txt
+from loaders.webpage_loader import load_webpage
 
 def load_any(path):
+    if path.startswith("http://") or path.startswith("https://"):
+        return load_webpage(path)
     ext = path.split(".")[-1].lower()
 
     if ext == "pdf":
