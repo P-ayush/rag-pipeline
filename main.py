@@ -1,18 +1,33 @@
-from pdf_loader import load_pdf
-from splitter import split_text
-from rag import rag_query
-from vector_store import load_vector_store, create_vector_store
-import os
+import argparse
+from rag.pipeline import ingest, rag_query
+
+def main():
+    parser = argparse.ArgumentParser(description="Multi-file RAG Pipeline")
+
+    parser.add_argument(
+        "--ingest",
+        type=str,
+        help="Path to file or URL to ingest into vector database"
+    )
+
+    parser.add_argument(
+        "--ask",
+        type=str,
+        help="Question to query the RAG system"
+    )
+
+    args = parser.parse_args()
+
+    if args.ingest:
+        print(f"[INFO] Ingesting: {args.ingest}")
+        chunks = ingest(args.ingest)
+        print(f"[SUCCESS] Ingested {chunks} chunks.\n")
+
+    if args.ask:
+        print(f"[QUESTION] {args.ask}")
+        answer = rag_query(args.ask)
+        print(f"\n[ANSWER]\n{answer}\n")
 
 
-text = load_pdf("./raw/ayushResumeUpdated.pdf")
-chunks = split_text(text)
-
-if not os.path.exists("./faiss_db"):
-    print("Creating FAISS DB for the first time...")
-    create_vector_store(chunks)
-else:
-        print("FAISS DB already exists.")
-while True:
-    question = input("\nAsk something about the uploaded pdf: ")
-    print("\nAnswer:", rag_query(question))
+if __name__ == "__main__":
+    main()

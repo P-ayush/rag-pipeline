@@ -1,6 +1,5 @@
 from langchain_huggingface import ChatHuggingFace, HuggingFaceEndpoint
 from langchain_core.prompts import ChatPromptTemplate
-from rag.vector_store import load_vector_store
 
 from dotenv import load_dotenv
 
